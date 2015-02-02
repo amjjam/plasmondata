@@ -55,8 +55,8 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
 
   files=[xfiles]
   
-  n=2
-  i=0
+  n=2l
+  i=0l
   template={name:"",l:0.,year:0l,doy:0l,hrut:0.,epoch:0d,localtime:0.,$
             mlt:0.,req:0.,mhz:0.,amucc:0.,hrsw:0.,by:0.,bz:0.,p:0.,hrg:0.,$
             g1:0.,g2:0.,hrdst:0.,dst:0.}
@@ -64,7 +64,6 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
   data=replicate(template,n)
   
   for j=0,n_elements(xfiles)-1 do begin
-     print,xfiles[j]
      openr,un,xfiles[j],/get_lun
      line=''
      readf,un,line
