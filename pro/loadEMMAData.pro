@@ -63,8 +63,8 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
 
   data=replicate(template,n)
   
-  for i=0,n_elements(xfiles)-1 do begin
-     openr,un,xfiles[i],/get_lun
+  for j=0,n_elements(xfiles)-1 do begin
+     openr,un,xfiles[j],/get_lun
      line=''
      readf,un,line
      readf,un,line
