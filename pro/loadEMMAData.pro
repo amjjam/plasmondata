@@ -151,6 +151,19 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
         else $
            d=create_struct(d,names[i],data[index])
      endfor
+
+     ; Get the longitude of stations and sort that list by L from 
+     ; maximum to minimum L
+     template={name:"",l:0.,mlon:0.}
+     pairs=replicate(template,n_elements(data))
+     pairs.name=data.name
+     pairs.l=data.l
+     pairs.mlon=((data.mlt-data.hrut+48) mod 24)*15.
+     pairs=pairs[sort(pairs.name)]
+     pairs=pairs[uniq(pairs.name)]
+     pairs=pairs[reverse(sort(pairs.l))]
+     d=create_struct('pairs',pairs,d)
+     
      data=d
   endif
   
