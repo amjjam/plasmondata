@@ -16,7 +16,7 @@ function loadEMMAStations,file
 ;               GLON=FLOAT, Geographic longitude in degrees
 ;               L=FLOAT, L-shell
 ;               MLAT=FLOAT, Magnetic latitude in degrees
-;               MLONG=FLOAT, Magnetic longitude in degrees
+;               MLON=FLOAT, Magnetic longitude in degrees
 ;              })
 ; FILE FORMAT:
 ;     First line is ignored, assuming it is heading

@@ -22,7 +22,7 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
 ;      D={P01:ARRAY(X),P02:ARRAY(X),...}
 ;      
 ;      X={NAME=STRING, Station pair name
-;         LSHELL=FLOAT. Station pair L-shell
+;         L=FLOAT. Station pair L-shell
 ;         YEAR=LONG. Year
 ;         DOY=LONG. Day of year (January 1 is DOY=1)
 ;         HRUT=FLOAT. UT time in hours
