@@ -188,6 +188,12 @@ function loadEMMAData,xfiles,sort=sort,stations=stations,clean=clean
      endfor
   endelse
 
+  ; Clean the data if the clean flag is set
+  if keyword_set(clean) then begin
+     index=where(data.qi mod 10 lt 5 and data.qi ne 99)
+     data=data[index]
+  endif
+
   ; If SORT is set then sort by station pair and time
   if keyword_set(sort) then begin
      names=data.name
