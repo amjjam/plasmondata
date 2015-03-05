@@ -1,4 +1,4 @@
-function loadEMMAData,xfiles,sort=sort,stations=stations
+function loadEMMAData,xfiles,sort=sort,stations=stations,clean=clean
   
 ;+
 ; NAME:
@@ -39,6 +39,7 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
 ;         G2=FLOAT.
 ;         HRDST=FLOAT. UT hour for Dst data
 ;         DST=FLOAT. Dst value
+;         QI=LONG. Quality flag.
 ;        }
 ; KEYWORDS:
 ;      SORT. If set then separate into arrays of X, sorted by name of
@@ -51,6 +52,57 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
 ;      stations in the structure and add that to UT to get MLT. If not 
 ;      specified then 100 degree magnetic longitude is assumed for all 
 ;      stations. 
+;      CLEAN. Remove points for which the quality flag indicates
+;      possible bad data. That means excluded data for which the
+;      second digit of QI is from 5 to 9 (both inclusive), or for
+;      which the quality flag is 99. 
+; NOTE:
+;      The meaning of the quality flag is as follows, according to
+;      e-mail from Balazs 2015/3/2:
+;
+;      99 means - no information on quality (if an observation is
+;                 isolated, i.e. there is not any observationclose in
+;                 time or in space to compare)
+;
+;      first digit:
+;      1: in the plasmasphere
+;      2: the outermost observation in the plasmasphere
+;      3: at the plasmapause (PP) (not yet used)
+;      4: the innermost observation in the p.trough
+;      5: in the p.trough
+;      9: UNKNOWN
+;
+;      second digit:
+;      1: fits the L-profile of density (highest quality observations)
+;      2: somewhat lower quality but good points
+;      3: points of quality 1 or 2 (qualified during time history 
+;         comparisons)
+;      5: outlier
+;      6: outlier
+;      9: unknown
+;
+;      e.g.
+;      11: in the plasmasphere (density is > 1000 amu/cc or 
+;          deviation from the linear trend fitted on previously 
+;          identified plasmaspheric points is below a threshold)
+;      21: the outermost observation in the plasmasphere (fisrt 
+;          high density gradient between 2 and 4)
+;      41: the innermost observation in the p.trough (preceeded 
+;          by the first high density gradient)
+;      51: in the p.trough (density is <50 amu/cc or deviation 
+;          from the linear trend fitted on previously identified 
+;          plasmaspheric points is below a threshold)
+;
+;      15 and 16 are outliers (in the plasmasphere L-range)
+;      etc.
+;
+;      Most important:
+;      You should exclude all values for which the second digit 
+;      of 5<=QI<9
+;
+;      You may also exlude uncertain values, QI = 99.
+;
+;      The plasmapause is somewhere between 2x and 4x points.
 ;-
 
   files=[xfiles]
@@ -59,13 +111,14 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
   i=0l
   template={name:"",l:0.,year:0l,doy:0l,hrut:0.,epoch:0d,localtime:0.,$
             mlt:0.,req:0.,mhz:0.,amucc:0.,hrsw:0.,by:0.,bz:0.,p:0.,hrg:0.,$
-            g1:0.,g2:0.,hrdst:0.,dst:0.}
+            g1:0.,g2:0.,hrdst:0.,dst:0., qi:0l}
 
   data=replicate(template,n)
   
   for j=0,n_elements(xfiles)-1 do begin
      openr,un,xfiles[j],/get_lun
      line=''
+     readf,un,line
      readf,un,line
      readf,un,line
      while not(eof(un)) do begin
@@ -93,6 +146,7 @@ function loadEMMAData,xfiles,sort=sort,stations=stations
         data[i].g2=float(fields[15])
         data[i].hrdst=float(fields[16])
         data[i].dst=float(fields[17])
+        data[i].qi=long(fields[18])
         i++
      endwhile
      free_lun,un
