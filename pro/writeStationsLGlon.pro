@@ -1,8 +1,8 @@
-pro writeStationsLMlon,d,file
+pro writeStationsLGlon,d,file
 
 ;+
 ; NAME:
-;   writeStationsLMlon
+;   writeStationsLGlon
 ; PURPOSE:
 ;   Write a file which contains the name, L-shell, and geographic
 ;   longitude of stations contained in a data structure.
@@ -10,7 +10,7 @@ pro writeStationsLMlon,d,file
 ;   It turns out that with the way DGCPM is currently set up the
 ;   geographic longitude is a more accurate longitude to use. 
 ; CALLING SEQUENCE:
-;   writeStationsLMlon,d,file
+;   writeStationsLGlon,d,file
 ; INPUTS:
 ;   d={}. The sorted structured returned by loadEMMAData called with
 ;   the SORT and STATIONS keywords supplied.
