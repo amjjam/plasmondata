@@ -36,11 +36,11 @@ pro writeStationsLGlon,d,file
   for i=0,n_tags(d)-1 do begin
      tmp=tag_names(d.(i)[0])
      if (where(tmp eq 'GLON'))[0] ne -1 then $
-        glon=tmp.glon $
+        glon=d.(i)[0].glon $
      else if(where(tmp eq 'GLT'))[0] ne -1 then $
-        glon=((tmp.glt-tmp.hrut+48.)*15) mod 360. $
+        glon=((d.(i)[0].glt-d.(i)[0].hrut+48.)*15) mod 360. $
      else if (where(tmp eq 'LOCALTIME'))[0] ne -1 then $
-        glon=((tmp.localtime-tmp.hrut+48.)*15) mod 360. $
+        glon=((d.(i)[0].localtime-d.(i)[0].hrut+48.)*15) mod 360. $
      else $
         message,'Could not find a tag for local time of longitude'
      printf,un,d.(i)[0].name,' ',float(d.(i)[0].l),' ',glon
