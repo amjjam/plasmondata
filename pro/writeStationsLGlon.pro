@@ -34,7 +34,7 @@ pro writeStationsLGlon,d,file
   openw,un,file,/get_lun
 
   for i=0,n_tags(d)-1 do begin
-     tmp=tagnames(d.(i)[0])
+     tmp=tag_names(d.(i)[0])
      if (where(tmp eq 'GLON'))[0] ne -1 then $
         glon=tmp.glon $
      else if(where(tmp eq 'GLT'))[0] ne -1 then $
