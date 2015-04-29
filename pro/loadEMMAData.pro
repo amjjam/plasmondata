@@ -113,6 +113,9 @@ function loadEMMAData,xfiles,sort=sort,stations=stations,clean=clean
             mlt:0.,req:0.,mhz:0.,amucc:0.,hrsw:0.,by:0.,bz:0.,p:0.,hrg:0.,$
             g1:0.,g2:0.,hrdst:0.,dst:0., qi:0l}
 
+  if keyword_set(stations) then begin
+     template=create_struct(template,{glat:0.,glon:0.,mlat:0.,mlon:0.})
+  endif
   data=replicate(template,n)
   
   for j=0,n_elements(xfiles)-1 do begin
@@ -162,10 +165,13 @@ function loadEMMAData,xfiles,sort=sort,stations=stations,clean=clean
      data[i].epoch=xepoch
   endfor
   
-  ; Add MLT data
+  ; Add MLT, GLAT, GLON, MLAT, MLON
   if keyword_set(stations) then begin
      for i=0,n_elements(stations)-1 do $
         stations[i].id=strlowcase(stations[i].id)
+     glat=fltarr(2)
+     glon=fltarr(2)
+     mlat=fltarr(2)
      mlon=fltarr(2)
      for i=0,n_elements(data)-1 do begin
         for j=0,1 do begin
@@ -177,9 +183,19 @@ function loadEMMAData,xfiles,sort=sort,stations=stations,clean=clean
            if n_elements(index) gt 1 then begin
               message,"More than one entry for station "+stn
            endif
+           glat[j]=stations[index[0]].glat
+           glon[j]=stations[index[0]].glon
+           mlat[j]=stations[index[0]].mlat
            mlon[j]=stations[index[0]].mlon
         endfor
+        aglat=(glat[0]+glat[1])/2.
+        aglon=(glon[0]+glon[1])/2.
+        amlat=(mlat[0]+mlat[1])/2.
         amlon=(mlon[0]+mlon[1])/2.
+        data[i].glat=aglat
+        data[i].glon=aglon
+        data[i].mlat=amlat
+        data[i].mlon=amlon
         data[i].mlt=(data[i].hrut+amlon/15.+24.) mod 24.
      endfor
   endif else begin
